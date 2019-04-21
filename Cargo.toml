@@ -1,0 +1,7 @@
+[package]
+name = "spin"
+version = "0.1.0"
+authors = ["plutolove <sa517255@mail.ustc.edu.cn>"]
+edition = "2018"
+
+[dependencies]
