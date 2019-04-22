@@ -7,4 +7,3 @@
 extern crate std;
 
 pub mod mutex;
-pub mod rwlock;
