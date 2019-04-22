@@ -16,8 +16,6 @@ impl<T> Mutex<T> {
     }
 
     pub fn into_inner(self) -> T {
-        // We know statically that there are no outstanding references to
-        // `self` so there's no need to lock.
         let Mutex { data, .. } = self;
         data.into_inner()
     }

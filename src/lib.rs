@@ -1,4 +1,5 @@
 pub mod mutex;
+pub mod rwlock;
 
 #[cfg(test)]
 mod tests {
@@ -15,7 +16,7 @@ mod tests {
     }
 
     #[test]
-    fn mutex_test() {
+    fn test_mutex1() {
         use crate::mutex::Mutex;
         use std::thread;
 
@@ -33,8 +34,35 @@ mod tests {
         }
 
         for _ in 0..K {
-            thread::spawn(move|| { inc();});
-            thread::spawn(move|| { inc();});
+            thread::spawn(move|| { inc();}).join().unwrap();
+            thread::spawn(move|| { inc();}).join().unwrap();
         }
+    }
+
+    #[test]
+    fn test_mutex2() {
+        use crate::mutex::{Mutex};
+        use std::thread;
+        use core::ops::DerefMut;
+
+        static MUTEX: Mutex<u32> = Mutex::new(0);
+        const N: u32 = 10;
+        const T: u32 = 5;
+
+        fn inc(i: u32) {
+            for _ in 0..N {
+                {
+                    let mut xx = MUTEX.lock();
+                    (*xx.deref_mut()) += i;
+                    println!("tmp: {}", xx.deref_mut());
+                }
+            }
+        }
+
+        for _ in 0..T {
+            thread::spawn(move|| { inc(1);}).join().unwrap();
+            thread::spawn(move|| { inc(2);}).join().unwrap();
+        }
+
     }
 }
